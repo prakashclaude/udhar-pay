@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  SHOPKEEPER
+  WHOLESALER
+  ADMIN
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum TransactionModule {
+  FRIEND
+  SHOP
+  WHOLESALER
+}
+
+enum PaymentMethod {
+  UPI
+  CASH
+  CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  mobile       String   @unique
+  passwordHash String
+  role         Role     @default(CUSTOMER)
+
+  // Optional profile fields (all non-mandatory)
+  address      String?
+  aadhaarNumber String? // Stored encrypted
+  panNumber    String?  // Stored encrypted
+  gstNumber    String?  // Stored encrypted; applicable for SHOPKEEPER/WHOLESALER
+
+  // QR Code
+  qrCode       String?  @unique
+
+  // Payment receive details (UPI / Bank)
+  upiId            String?   // e.g. user@paytm
+  bankAccountNumber String?
+  bankIfsc         String?
+  bankAccountName  String?
+  bankName         String?
+
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  sentTransactions     Transaction[] @relation("Sender")
+  receivedTransactions Transaction[] @relation("Receiver")
+  sentPayments         Payment[]     @relation("Payer")
+  receivedPayments     Payment[]     @relation("Payee")
+  notifications        Notification[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  amount      Float
+  type        TransactionType
+  module      TransactionModule
+  description String?
+  
+  senderId    String
+  sender      User              @relation("Sender", fields: [senderId], references: [id])
+  
+  receiverId  String
+  receiver    User              @relation("Receiver", fields: [receiverId], references: [id])
+
+  // Invoice details (for Wholesaler module)
+  invoiceNumber String?
+  invoiceDate   DateTime?
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  payments    Payment[]
+
+  @@map("transactions")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+
+  payerId       String
+  payer         User          @relation("Payer", fields: [payerId], references: [id])
+
+  payeeId       String
+  payee         User          @relation("Payee", fields: [payeeId], references: [id])
+
+  transactionId String?
+  transaction   Transaction?  @relation(fields: [transactionId], references: [id])
+
+  // OTP for cash payments
+  otp           String?
+  otpExpiresAt  DateTime?
+  otpVerified   Boolean       @default(false)
+
+  // UPI reference
+  upiRef        String?
+
+  receiptUrl    String?
+  notes         String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model OtpLog {
+  id        String   @id @default(uuid())
+  mobile    String
+  otp       String
+  purpose   String   // "LOGIN", "PAYMENT", "REGISTER"
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("otp_logs")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String   // e.g., "REMINDER"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@map("notifications")
+}
+
+model SiteConfig {
+  id        String   @id @default("config")
+  tagline   String?  @default("Digital Udhar. Zero Interest. Total Transparency.")
+  aboutUs   String?
+  contactUs String? // Kept for backward compatibility/generic text
+  contactEmail String?
+  contactPhone String?
+  contactHours String?
+  bannerUrl String?
+  updatedAt DateTime @updatedAt
+
+  @@map("site_config")
+}

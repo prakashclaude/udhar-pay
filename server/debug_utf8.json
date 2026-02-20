@@ -1,0 +1,150 @@
+﻿{
+    "value":  [
+                  {
+                      "id":  "0dd8ec33-9ac7-4dd9-9cdc-6024a4e83fa0",
+                      "amount":  2000,
+                      "type":  "CREDIT",
+                      "module":  "FRIEND",
+                      "description":  "giving loan",
+                      "senderId":  "26949465-745a-48bc-956b-3dd036ecb870",
+                      "receiverId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                      "invoiceNumber":  null,
+                      "invoiceDate":  null,
+                      "createdAt":  "2026-02-20T10:38:22.633Z",
+                      "updatedAt":  "2026-02-20T10:38:22.633Z",
+                      "payments":  [
+
+                                   ]
+                  },
+                  {
+                      "id":  "01525454-37ad-4013-8f13-62bd34a39bbc",
+                      "amount":  1000,
+                      "type":  "CREDIT",
+                      "module":  "FRIEND",
+                      "description":  null,
+                      "senderId":  "ec97a0af-0efe-4bd9-ac56-8820fd7a9e51",
+                      "receiverId":  "593a2fa7-5ae9-465b-b7a3-e35e53c59efe",
+                      "invoiceNumber":  null,
+                      "invoiceDate":  null,
+                      "createdAt":  "2026-02-20T09:35:08.577Z",
+                      "updatedAt":  "2026-02-20T09:35:08.577Z",
+                      "payments":  [
+                                       {
+                                           "id":  "47526c15-9ab7-4995-b8a5-eb0959ecba08",
+                                           "amount":  500,
+                                           "method":  "CASH",
+                                           "status":  "COMPLETED",
+                                           "payerId":  "593a2fa7-5ae9-465b-b7a3-e35e53c59efe",
+                                           "payeeId":  "ec97a0af-0efe-4bd9-ac56-8820fd7a9e51",
+                                           "transactionId":  "01525454-37ad-4013-8f13-62bd34a39bbc",
+                                           "otp":  null,
+                                           "otpExpiresAt":  null,
+                                           "otpVerified":  false,
+                                           "upiRef":  null,
+                                           "receiptUrl":  null,
+                                           "notes":  null,
+                                           "createdAt":  "2026-02-20T09:38:28.687Z",
+                                           "updatedAt":  "2026-02-20T09:38:28.687Z"
+                                       }
+                                   ]
+                  },
+                  {
+                      "id":  "52474755-df2f-4298-92ec-f106e20219b5",
+                      "amount":  1000,
+                      "type":  "CREDIT",
+                      "module":  "SHOP",
+                      "description":  "Matching clothes",
+                      "senderId":  "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                      "receiverId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                      "invoiceNumber":  null,
+                      "invoiceDate":  null,
+                      "createdAt":  "2026-02-18T17:18:00.441Z",
+                      "updatedAt":  "2026-02-18T17:18:00.441Z",
+                      "payments":  [
+                                       {
+                                           "id":  "c399230e-1fce-48fd-84a2-fbee119f5f72",
+                                           "amount":  500,
+                                           "method":  "CASH",
+                                           "status":  "COMPLETED",
+                                           "payerId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                                           "payeeId":  "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                                           "transactionId":  "52474755-df2f-4298-92ec-f106e20219b5",
+                                           "otp":  null,
+                                           "otpExpiresAt":  null,
+                                           "otpVerified":  false,
+                                           "upiRef":  null,
+                                           "receiptUrl":  null,
+                                           "notes":  "Only paying partial amount",
+                                           "createdAt":  "2026-02-20T09:49:29.312Z",
+                                           "updatedAt":  "2026-02-20T09:49:29.312Z"
+                                       },
+                                       {
+                                           "id":  "1c8ca84c-de67-4de8-9ae1-a5eb604a474b",
+                                           "amount":  100,
+                                           "method":  "CASH",
+                                           "status":  "COMPLETED",
+                                           "payerId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                                           "payeeId":  "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                                           "transactionId":  "52474755-df2f-4298-92ec-f106e20219b5",
+                                           "otp":  null,
+                                           "otpExpiresAt":  null,
+                                           "otpVerified":  false,
+                                           "upiRef":  null,
+                                           "receiptUrl":  null,
+                                           "notes":  "another payment",
+                                           "createdAt":  "2026-02-20T10:03:49.558Z",
+                                           "updatedAt":  "2026-02-20T10:04:31.345Z"
+                                       }
+                                   ]
+                  },
+                  {
+                      "id":  "4e738a47-d610-42cf-81dd-6e3b278561b5",
+                      "amount":  1000,
+                      "type":  "CREDIT",
+                      "module":  "FRIEND",
+                      "description":  "another loan",
+                      "senderId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                      "receiverId":  "26949465-745a-48bc-956b-3dd036ecb870",
+                      "invoiceNumber":  null,
+                      "invoiceDate":  null,
+                      "createdAt":  "2026-02-18T15:23:25.637Z",
+                      "updatedAt":  "2026-02-18T15:23:25.637Z",
+                      "payments":  [
+
+                                   ]
+                  },
+                  {
+                      "id":  "06861488-08a6-42cb-bacc-2acaf911d0ca",
+                      "amount":  500,
+                      "type":  "CREDIT",
+                      "module":  "FRIEND",
+                      "description":  "First Test Loan",
+                      "senderId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                      "receiverId":  "26949465-745a-48bc-956b-3dd036ecb870",
+                      "invoiceNumber":  null,
+                      "invoiceDate":  null,
+                      "createdAt":  "2026-02-18T15:20:05.193Z",
+                      "updatedAt":  "2026-02-18T15:20:05.193Z",
+                      "payments":  [
+                                       {
+                                           "id":  "b3cd818c-80f6-43c7-b9d2-e93c26dca75f",
+                                           "amount":  500,
+                                           "method":  "UPI",
+                                           "status":  "COMPLETED",
+                                           "payerId":  "26949465-745a-48bc-956b-3dd036ecb870",
+                                           "payeeId":  "b351305d-5494-4b2b-8d07-0fd578a4399f",
+                                           "transactionId":  "06861488-08a6-42cb-bacc-2acaf911d0ca",
+                                           "otp":  null,
+                                           "otpExpiresAt":  null,
+                                           "otpVerified":  false,
+                                           "upiRef":  "prakash.18kumar@okicici",
+                                           "receiptUrl":  null,
+                                           "notes":  null,
+                                           "createdAt":  "2026-02-18T15:21:41.122Z",
+                                           "updatedAt":  "2026-02-18T15:21:41.122Z"
+                                       }
+                                   ]
+                  }
+              ],
+    "Count":  5
+}

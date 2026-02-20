@@ -1,0 +1,18 @@
+[2026-02-18T12:15:27.100Z] Synchronous Error:
+Error: Cannot find module 'axios'
+Require stack:
+- D:\webpage\udhar-pay-web\server\src\services\smsService.js
+- D:\webpage\udhar-pay-web\server\src\controllers\authController.js
+- D:\webpage\udhar-pay-web\server\src\routes\authRoutes.js
+- D:\webpage\udhar-pay-web\server\index.js
+- D:\webpage\udhar-pay-web\server\debug-server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (D:\webpage\udhar-pay-web\server\src\services\smsService.js:8:15)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)

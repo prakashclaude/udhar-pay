@@ -1,0 +1,396 @@
+﻿[dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+node : D:\webpage\udh
+ar-pay-web\server\nod
+e_modules\@prisma\cli
+ent\runtime\client.js
+:66
+At line:1 char:1
++ node index.js > 
+server-error.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (D:\webp   
+ age\udha...me\cl    
+ient.js:66:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+Read more at https://
+pris.ly/d/client-cons
+tructor`),this.name="
+PrismaClientConstruct
+orValidationError"}ge
+t[Symbol.toStringTag]
+(){return"PrismaClien
+tConstructorValidatio
+nError"}};mt(R,"Prism
+aClientConstructorVal
+idationError");var Nl
+=["errorFormat","adap
+ter","accelerateUrl",
+"log","transactionOpt
+ions","omit","comment
+s","__internal"],Dl=[
+"pretty","colorless",
+"minimal"],Fl=["info"
+,"query","warn","erro
+r"],wm={adapter:()=>{
+},accelerateUrl:e=>{i
+f(e!==void 
+0){if(typeof 
+e!="string")throw 
+new R(`Invalid value 
+${JSON.stringify(e)} 
+for "accelerateUrl" 
+provided to 
+PrismaClient construc
+tor.`);if(e.trim().le
+ngth===0)throw new 
+R('"accelerateUrl" 
+provided to 
+PrismaClient 
+constructor must be 
+a non-empty string.')
+}},errorFormat:e=>{if
+(e){if(typeof 
+e!="string")throw 
+new R(`Invalid value 
+${JSON.stringify(e)} 
+for "errorFormat" 
+provided to 
+PrismaClient construc
+tor.`);if(!Dl.include
+s(e)){let 
+t=jt(e,Dl);throw new 
+R(`Invalid 
+errorFormat ${e} 
+provided to 
+PrismaClient construc
+tor.${t}`)}}},log:e=>
+{if(!e)return;if(!Arr
+ay.isArray(e))throw 
+new R(`Invalid value 
+${JSON.stringify(e)} 
+for "log" provided 
+to PrismaClient const
+ructor.`);function 
+t(r){if(typeof r=="st
+ring"&&!Fl.includes(r
+)){let 
+n=jt(r,Fl);throw new 
+R(`Invalid log level 
+"${r}" provided to 
+PrismaClient construc
+tor.${n}`)}}for(let 
+r of e){t(r);let n={l
+evel:t,emit:i=>{let o
+=["stdout","event"];i
+f(!o.includes(i)){let
+ s=jt(i,o);throw new 
+R(`Invalid value 
+${JSON.stringify(i)} 
+for "emit" in 
+logLevel provided to 
+PrismaClient construc
+tor.${s}`)}}};if(r&&t
+ypeof r=="object")for
+(let[i,o]of Object.en
+tries(r))if(n[i])n[i]
+(o);else throw new 
+R(`Invalid property 
+${i} for "log" 
+provided to 
+PrismaClient construc
+tor`)}},transactionOp
+tions:e=>{if(!e)retur
+n;let t=e.maxWait;if(
+t!=null&&t<=0)throw 
+new R(`Invalid value 
+${t} for maxWait in 
+"transactionOptions" 
+provided to 
+PrismaClient 
+constructor. maxWait 
+needs to be greater 
+than 0`);let r=e.time
+out;if(r!=null&&r<=0)
+throw new R(`Invalid 
+value ${r} for 
+timeout in 
+"transactionOptions" 
+provided to 
+PrismaClient 
+constructor. timeout 
+needs to be greater 
+than 0`)},omit:(e,t)=
+>{if(typeof 
+e!="object")throw 
+new R('"omit" option 
+is expected to be an 
+object.');if(e===null
+)throw new R('"omit" 
+option can not be 
+`null`');let 
+r=[];for(let[n,i]of O
+bject.entries(e)){let
+ o=Em(n,t.runtimeData
+Model);if(!o){r.push(
+{kind:"UnknownModel",
+modelKey:n});continue
+}for(let[s,a]of Objec
+t.entries(i)){let l=o
+.fields.find(u=>u.nam
+e===s);if(!l){r.push(
+{kind:"UnknownField",
+modelKey:n,fieldName:
+s});continue}if(l.rel
+ationName){r.push({ki
+nd:"RelationInOmit",m
+odelKey:n,fieldName:s
+});continue}typeof a!
+="boolean"&&r.push({k
+ind:"InvalidFieldValu
+e",modelKey:n,fieldNa
+me:s})}}if(r.length>0
+)throw new R(Pm(e,r))
+},comments:e=>{if(e!=
+=void 0){if(!Array.is
+Array(e))throw new 
+R(`Invalid value 
+${JSON.stringify(e)} 
+for "comments" 
+provided to 
+PrismaClient 
+constructor. 
+Expected an array of 
+SQL commenter 
+plugins.`);for(let t=
+0;t<e.length;t++)if(t
+ypeof e[t]!="function
+")throw new 
+R(`Invalid value at 
+index ${t} for 
+"comments" provided 
+to PrismaClient 
+constructor. Each 
+plugin must be a func
+tion.`)}},__internal:
+e=>{if(!e)return;let 
+t=["debug","engine","
+configOverride"];if(t
+ypeof 
+e!="object")throw 
+new R(`Invalid value 
+${JSON.stringify(e)} 
+for "__internal" to 
+PrismaClient construc
+tor`);for(let[r]of Ob
+ject.entries(e))if(!t
+.includes(r)){let 
+n=jt(r,t);throw new 
+R(`Invalid property 
+${JSON.stringify(r)} 
+for "__internal" 
+provided to 
+PrismaClient construc
+tor.${n}`)}}};functio
+n bm(e){let 
+t=e.adapter!==void 0,
+r=e.accelerateUrl!==v
+oid 0;if(t&&r)throw 
+new R('The "adapter" 
+and "accelerateUrl" 
+options are mutually 
+exclusive. Please 
+provide only one of t
+hem.');if(!t&&!r)thro
+w new R('Using 
+engine type "client" 
+requires either 
+"adapter" or 
+"accelerateUrl" to 
+be provided to 
+PrismaClient construc
+tor.')}function Ll(e,
+t){for(let[r,n]of Obj
+ect.entries(e)){if(!N
+l.includes(r)){let 
+i=jt(r,Nl);throw new 
+R(`Unknown property 
+${r} provided to 
+PrismaClient construc
+tor.${i}`)}wm[r](n,t)
+}bm(e)}function jt(e,
+t){if(t.length===0||t
+ypeof e!="string")ret
+urn"";let 
+r=xm(e,t);return r?` 
+Did you mean 
+"${r}"?`:""}function 
+xm(e,t){if(t.length==
+=0)return null;let r=
+t.map(i=>({value:i,di
+stance:(0,_l.default)
+(e,i)}));r.sort((i,o)
+=>i.distance<o.distan
+ce?-1:1);let 
+n=r[0];return n.dista
+nce<3?n.value:null}fu
+nction 
+Em(e,t){return Ml(t.m
+odels,e)??Ml(t.types,
+e)}function 
+Ml(e,t){let r=Object.
+keys(e).find(n=>ue(n)
+===t);if(r)return 
+e[r]}function 
+Pm(e,t){let 
+r=je(e);for(let o of 
+t)switch(o.kind){case
+"UnknownModel":r.argu
+ments.getField(o.mode
+lKey)?.markAsError(),
+r.addErrorMessage(()=
+>`Unknown model 
+name: ${o.modelKey}.`
+);break;case"UnknownF
+ield":r.arguments.get
+DeepField([o.modelKey
+,o.fieldName])?.markA
+sError(),r.addErrorMe
+ssage(()=>`Model 
+"${o.modelKey}" does 
+not have a field 
+named "${o.fieldName}
+".`);break;case"Relat
+ionInOmit":r.argument
+s.getDeepField([o.mod
+elKey,o.fieldName])?.
+markAsError(),r.addEr
+rorMessage(()=>'Relat
+ions are already 
+excluded by default 
+and can not be 
+specified in "omit".'
+);break;case"InvalidF
+ieldValue":r.argument
+s.getDeepFieldValue([
+o.modelKey,o.fieldNam
+e])?.markAsError(),r.
+addErrorMessage(()=>"
+Omit field option 
+value must be a boole
+an.");break}let{messa
+ge:n,args:i}=sr(r,"co
+lorless");return`Erro
+r validating "omit" 
+option:
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+            
+
+PrismaClientConstruct
+orValidationError: 
+Unknown property 
+datasourceUrl 
+provided to 
+PrismaClient 
+constructor.
+Read more at https://
+pris.ly/d/client-cons
+tructor
+    at Ll (D:\webpage
+\udhar-pay-web\server
+\node_modules\@prisma
+\client\runtime\clien
+t.js:66:3832)
+    at new t (D:\webp
+age\udhar-pay-web\ser
+ver\node_modules\@pri
+sma\client\runtime\cl
+ient.js:70:1241)
+    at 
+Object.<anonymous> (D
+:\webpage\udhar-pay-w
+eb\server\src\config\
+database.js:3:16)
+    at 
+Module._compile (node
+:internal/modules/cjs
+/loader:1521:14)
+    at Module._extens
+ions..js (node:intern
+al/modules/cjs/loader
+:1623:10)
+    at Module.load (n
+ode:internal/modules/
+cjs/loader:1266:32)
+    at Module._load (
+node:internal/modules
+/cjs/loader:1091:12)
+    at 
+Module.require (node:
+internal/modules/cjs/
+loader:1289:19)
+    at require (node:
+internal/modules/help
+ers:182:18)
+    at 
+Object.<anonymous> (D
+:\webpage\udhar-pay-w
+eb\server\src\control
+lers\authController.j
+s:2:16)
+
+Node.js v20.20.0
