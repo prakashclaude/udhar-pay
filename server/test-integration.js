@@ -94,6 +94,30 @@ async function runTests() {
         console.log('Profile:', profileRes.data.data);
         console.log('Decrypted Aadhaar:', profileRes.data.data.aadhaarNumber);
 
+        // 5. Create Transaction
+        console.log('\n[5] Creating Transaction...');
+        try {
+            const txRes = await axios.post(`${BASE_URL}/transactions`, {
+                receiverId: "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                amount: 200,
+                module: "SHOPKEEPER",
+                description: "integration test",
+                direction: "gave"
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('Transaction Success:', txRes.data.message);
+        } catch (error) {
+            console.error('\n!!! TRANSACTION CREATION FAILED !!!');
+            if (error.response) {
+                console.error('Status:', error.response.status);
+                console.error('Data:', error.response.data);
+            } else {
+                console.error(error.message);
+            }
+            throw new Error("Transaction Test Failed");
+        }
+
         console.log('\n!!! INTEGRATION TEST PASSED !!!');
 
     } catch (error) {

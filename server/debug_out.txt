@@ -1,0 +1,138 @@
+Testing transaction create...
+prisma:error 
+Invalid `prisma.transaction.create()` invocation in
+D:\webpage\udhar-pay-web\server\debug-prisma.js:6:54
+
+  3 async function debugPrisma() {
+  4     try {
+  5         console.log("Testing transaction create...");
+→ 6         const transaction = await prisma.transaction.create({
+              data: {
+                amount: 200,
+                type: "CREDIT",
+                module: "SHOPKEEPER",
+                        ~~~~~~~~~~~~
+                description: "test description",
+                senderId: "593a2fa7-5ae9-465b-b7a3-e35e53c59efe",
+                receiverId: "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                invoiceNumber: null,
+                invoiceDate: null
+              },
+              include: {
+                sender: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                },
+                receiver: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                }
+              }
+            })
+
+Invalid value for argument `module`. Expected TransactionModule.
+PRISMA ERROR CAUGHT!
+PrismaClientValidationError: 
+Invalid `prisma.transaction.create()` invocation in
+D:\webpage\udhar-pay-web\server\debug-prisma.js:6:54
+
+  3 async function debugPrisma() {
+  4     try {
+  5         console.log("Testing transaction create...");
+→ 6         const transaction = await prisma.transaction.create({
+              data: {
+                amount: 200,
+                type: "CREDIT",
+                module: "SHOPKEEPER",
+                        ~~~~~~~~~~~~
+                description: "test description",
+                senderId: "593a2fa7-5ae9-465b-b7a3-e35e53c59efe",
+                receiverId: "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                invoiceNumber: null,
+                invoiceDate: null
+              },
+              include: {
+                sender: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                },
+                receiver: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                }
+              }
+            })
+
+Invalid value for argument `module`. Expected TransactionModule.
+    at ar (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:10:1379)
+    at zr.handleRequestError (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7815)
+    at zr.handleAndLogRequestError (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7467)
+    at zr.request (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7174)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async a (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:75:5816)
+    at async debugPrisma (D:\webpage\udhar-pay-web\server\debug-prisma.js:6:29) {
+  clientVersion: '7.4.0'
+}
+PrismaClientValidationError: 
+Invalid `prisma.transaction.create()` invocation in
+D:\webpage\udhar-pay-web\server\debug-prisma.js:6:54
+
+  3 async function debugPrisma() {
+  4     try {
+  5         console.log("Testing transaction create...");
+→ 6         const transaction = await prisma.transaction.create({
+              data: {
+                amount: 200,
+                type: "CREDIT",
+                module: "SHOPKEEPER",
+                        ~~~~~~~~~~~~
+                description: "test description",
+                senderId: "593a2fa7-5ae9-465b-b7a3-e35e53c59efe",
+                receiverId: "c4dc72aa-6062-4325-9960-950a2ce476c1",
+                invoiceNumber: null,
+                invoiceDate: null
+              },
+              include: {
+                sender: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                },
+                receiver: {
+                  select: {
+                    id: true,
+                    name: true,
+                    mobile: true,
+                    role: true
+                  }
+                }
+              }
+            })
+
+Invalid value for argument `module`. Expected TransactionModule.
+    at ar (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:10:1379)
+    at zr.handleRequestError (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7815)
+    at zr.handleAndLogRequestError (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7467)
+    at zr.request (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:65:7174)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async a (D:\webpage\udhar-pay-web\server\node_modules\@prisma\client\runtime\client.js:75:5816)
+    at async debugPrisma (D:\webpage\udhar-pay-web\server\debug-prisma.js:6:29)

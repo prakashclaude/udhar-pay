@@ -1,0 +1,9 @@
+[dotenv@17.3.1] injecting env (12) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+prisma:query SELECT "public"."users"."id", "public"."users"."name", "public"."users"."mobile", "public"."users"."passwordHash", "public"."users"."role"::text, "public"."users"."address", "public"."users"."aadhaarNumber", "public"."users"."panNumber", "public"."users"."gstNumber", "public"."users"."qrCode", "public"."users"."upiId", "public"."users"."bankAccountNumber", "public"."users"."bankIfsc", "public"."users"."bankAccountName", "public"."users"."bankName", "public"."users"."isActive", "public"."users"."createdAt", "public"."users"."updatedAt" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") LIMIT $2 OFFSET $3
+Using USER: Integration Test User (593a2fa7-5ae9-465b-b7a3-e35e53c59efe)
+Simulating Submit from QR Scanner Form...
+API ERROR DETECTED:
+{
+  "success": false,
+  "message": "Failed to create transaction"
+}

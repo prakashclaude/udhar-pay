@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-console.log("Forcing nodemon restart to load Prisma Client with Notifications table...");
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');

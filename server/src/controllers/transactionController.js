@@ -7,7 +7,12 @@ const { decrypt } = require('../utils/encryption');
  */
 async function createTransaction(req, res) {
     try {
-        const { receiverId, amount, module, description, invoiceNumber, invoiceDate, direction } = req.body;
+        const { receiverId, amount, description, invoiceNumber, invoiceDate, direction } = req.body;
+        let { module } = req.body;
+
+        // Normalize role-to-module mapping for the database enum
+        if (module === 'SHOPKEEPER') module = 'SHOP';
+
         const senderId = req.user.id;
 
         // direction: 'gave' = I gave credit (I am sender), 'received' = I received credit (swap roles)
@@ -97,8 +102,8 @@ async function createTransaction(req, res) {
             },
             include: {
                 sender: { select: { id: true, name: true, mobile: true, role: true } },
-                receiver: { select: { id: true, name: true, mobile: true, role: true } },
-            },
+                receiver: { select: { id: true, name: true, mobile: true, role: true } }
+            }
         });
 
         // 2. ===== Auto-Settlement (Netting) Logic via Double-Entry Cross-Payments =====
@@ -162,7 +167,10 @@ async function createTransaction(req, res) {
             },
         });
     } catch (error) {
-        console.error('createTransaction error:', error);
+        console.error('============ createTransaction error ============');
+        console.error(error);
+        if (error.stack) console.error(error.stack);
+        console.error('=================================================');
         res.status(500).json({ success: false, message: 'Failed to create transaction' });
     }
 }
@@ -557,11 +565,6 @@ async function getPendingPayments(req, res) {
             },
             orderBy: { createdAt: 'desc' },
         });
-
-        console.log(`[DEBUG] getPendingPayments for userId=${userId} found ${payments.length} payments.`);
-        if (payments.length > 0) {
-            console.log(`[DEBUG] First payment payerId=${payments[0].payerId}, payeeId=${payments[0].payeeId}`);
-        }
 
         res.json({ success: true, data: payments });
     } catch (error) {

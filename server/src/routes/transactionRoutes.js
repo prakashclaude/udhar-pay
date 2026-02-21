@@ -32,7 +32,7 @@ router.get('/', [
 router.post('/', [
     body('receiverId').isUUID().withMessage('Invalid receiver ID'),
     body('amount').isFloat({ min: 1 }).withMessage('Amount must be at least 1'),
-    body('module').isIn(['FRIEND', 'SHOP', 'WHOLESALER']).withMessage('Invalid module'),
+    body('module').isIn(['FRIEND', 'SHOP', 'SHOPKEEPER', 'WHOLESALER']).withMessage('Invalid module'),
     body('description').optional().trim().isLength({ max: 500 }),
     body('direction').optional().isIn(['gave', 'received']).withMessage('Direction must be gave or received'),
     body('invoiceNumber').optional().trim(),

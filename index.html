@@ -923,7 +923,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, createContext, useContext } = React;
+        const { useState, useEffect, createContext, useContext, useRef } = React;
 
         // API Helper
         const apiCall = async (endpoint, method = 'GET', data = null) => {
@@ -2154,41 +2154,156 @@
             const [amount, setAmount] = useState('');
             const [description, setDescription] = useState('');
             const [module, setModule] = useState('p2p');
+            const [direction, setDirection] = useState('received'); // 'received' = I took Udhar, 'gave' = I gave Udhar/Payment
+            const [apiError, setApiError] = useState('');
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [scanError, setScanError] = useState(null);
+            const [isFetchingData, setIsFetchingData] = useState(false);
+            const scannerRef = useRef(null);
+
+            useEffect(() => {
+                // Cleanup scanner on unmount
+                return () => {
+                    if (scannerRef.current) {
+                        try {
+                            if (scannerRef.current.isScanning) {
+                                scannerRef.current.stop().then(() => {
+                                    scannerRef.current.clear();
+                                }).catch(e => console.error("Error stopping scanner on unmount:", e));
+                            } else {
+                                scannerRef.current.clear();
+                            }
+                        } catch (e) {
+                            console.error("Error clearing scanner on unmount:", e);
+                        }
+                    }
+                };
+            }, []);
 
             const startScanning = () => {
                 setScanning(true);
-                // Simulate QR scan (in real app, use html5-qrcode library)
-                setTimeout(() => {
-                    const mockScanData = {
-                        qrCode: 'UDHAR-PAY-9876543210-1234567890',
-                        name: 'Rahul Sharma',
-                        mobile: '9876543210',
-                        userType: 'customer'
-                    };
-                    setScannedData(mockScanData);
-                    setScanning(false);
-                }, 2000);
+                setScanError(null);
+
+                setTimeout(async () => {
+                    if (!document.getElementById('qr-reader')) {
+                        console.error("QR reader element not found");
+                        setScanning(false);
+                        return;
+                    }
+
+                    try {
+                        const html5QrCode = new Html5Qrcode("qr-reader");
+                        scannerRef.current = html5QrCode;
+
+                        await html5QrCode.start(
+                            { facingMode: "environment" },
+                            {
+                                fps: 10,
+                                qrbox: { width: 250, height: 250 }
+                            },
+                            onScanSuccess,
+                            onScanFailure
+                        );
+                    } catch (err) {
+                        console.error("Failed to start scanner:", err);
+                        setScanError("Could not start camera. Please ensure permissions are granted.");
+                        setScanning(false);
+                    }
+                }, 50);
             };
 
-            const handleRecordCredit = () => {
-                if (!amount || parseFloat(amount) <= 0) {
-                    alert('Please enter valid amount');
+            const stopScanning = async () => {
+                if (scannerRef.current) {
+                    try {
+                        if (scannerRef.current.isScanning) {
+                            await scannerRef.current.stop();
+                        }
+                        scannerRef.current.clear();
+                        scannerRef.current = null;
+                    } catch (e) {
+                        console.error("Failed to clear scanner:", e);
+                    }
+                }
+                setScanning(false);
+                setScanError(null);
+            };
+
+            const onScanSuccess = async (decodedText, decodedResult) => {
+                // Stop scanner first
+                await stopScanning();
+
+                if (!decodedText.startsWith('UDHAR-')) {
+                    setScanError("Invalid QR Code. Please scan a valid Udhar-Pay QR.");
                     return;
                 }
 
-                const transaction = {
-                    type: 'credit',
-                    with: scannedData.name,
-                    withMobile: scannedData.mobile,
-                    amount: parseFloat(amount),
-                    description: description,
-                    module: module,
-                    status: 'pending'
-                };
+                setIsFetchingData(true);
+                try {
+                    // 1. Fetch user by QR Code
+                    const userRes = await apiCall(`/api/transactions/by-qr/${encodeURIComponent(decodedText)}`);
+                    const scannedUser = userRes.data;
 
-                addTransaction(transaction);
-                alert(`✅ Credit of ₹${amount} recorded with ${scannedData.name}`);
-                navigate('dashboard');
+                    // 2. Fetch existing balance with this user
+                    const balanceRes = await apiCall(`/api/transactions/balance/${scannedUser.id}`);
+                    const balanceData = balanceRes.data;
+
+                    setScannedData({
+                        ...scannedUser,
+                        balance: balanceData
+                    });
+
+                    // 3. Smart Defaults based on role and balance
+                    let defaultModule = 'p2p';
+                    if (scannedUser.role === 'SHOPKEEPER') defaultModule = 'shopkeeper';
+                    else if (scannedUser.role === 'WHOLESALER') defaultModule = 'wholesaler';
+                    setModule(defaultModule);
+
+                    // If I owe them money, default to paying them back
+                    if (balanceData.iOweThem > 0) {
+                        setDirection('gave');
+                    } else {
+                        setDirection('received');
+                    }
+
+                } catch (err) {
+                    setScanError(err.response?.data?.message || "Failed to fetch user details.");
+                } finally {
+                    setIsFetchingData(false);
+                }
+            };
+
+            const onScanFailure = (error) => {
+                // Typically ignore continuous scan failures, but log for debugging if needed
+                // console.warn(`Code scan error = ${error}`);
+            };
+
+            const handleRecordCredit = async () => {
+                if (!amount || parseFloat(amount) <= 0) {
+                    setApiError('Please enter a valid amount greater than 0');
+                    return;
+                }
+
+                setIsSubmitting(true);
+                setApiError('');
+
+                try {
+                    const payload = {
+                        receiverId: scannedData.id,
+                        amount: parseFloat(amount),
+                        module: module.toUpperCase(),
+                        description: description,
+                        direction: direction
+                    };
+
+                    const response = await apiCall('/api/transactions', 'POST', payload);
+
+                    alert(response.message || `Transaction of ₹${amount} recorded with ${scannedData.name}`);
+                    navigate('dashboard');
+                } catch (error) {
+                    setApiError(error.response?.data?.message || 'Failed to record transaction');
+                } finally {
+                    setIsSubmitting(false);
+                }
             };
 
             return (
@@ -2205,6 +2320,14 @@
 
                         {!scannedData ? (
                             <div className="scanner-container">
+                                {scanError && (
+                                    <div className="alert alert-danger mb-3">
+                                        ❌ {scanError}
+                                    </div>
+                                )}
+
+                                <div id="qr-reader" style={{ width: '100%', maxWidth: '500px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden' }}></div>
+
                                 {!scanning ? (
                                     <>
                                         <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--bg-light)', borderRadius: '12px' }}>
@@ -2225,72 +2348,131 @@
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="loading">
+                                    <div className="text-center mt-3">
+                                        <button className="btn btn-outline" onClick={stopScanning}>
+                                            Cancel Scanning
+                                        </button>
+                                    </div>
+                                )}
+
+                                {isFetchingData && (
+                                    <div className="loading mt-3">
                                         <div className="spinner"></div>
-                                        <p>Scanning QR Code...</p>
-                                        <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-                                            Demo: Auto-detecting in 2 seconds
-                                        </p>
+                                        <p>Fetching user details...</p>
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <div>
-                                <div className="alert alert-success">
-                                    ✅ QR Code Scanned Successfully!
+                                <div className="alert alert-success mb-3">
+                                    ✅ Scan Successful! Recording transaction with {scannedData.name}.
                                 </div>
 
-                                <div className="card" style={{ background: 'var(--bg-light)' }}>
-                                    <h3>Scanned User Details</h3>
-                                    <p><strong>Name:</strong> {scannedData.name}</p>
-                                    <p><strong>Mobile:</strong> +91 {scannedData.mobile}</p>
-                                    <p><strong>Type:</strong> {scannedData.userType}</p>
+                                <div className="card mb-3" style={{ background: 'var(--bg-light)', border: '1px solid var(--border)' }}>
+                                    <div className="flex align-center gap-3">
+                                        <div className="avatar avatar-large" style={{ background: 'var(--primary)', color: 'white' }}>
+                                            {scannedData.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <h3 style={{ margin: '0 0 0.25rem 0' }}>{scannedData.name}</h3>
+                                            <p className="text-muted m-0" style={{ fontSize: '0.875rem' }}>
+                                                +91 {scannedData.mobile} • {scannedData.role}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px dashed var(--border)' }}>
+                                        {scannedData.balance?.theyOweMe > 0 && (
+                                            <p style={{ color: 'var(--success)', margin: '0 0 0.5rem 0', fontWeight: 'bold' }}>
+                                                ⏳ They owe you: ₹{scannedData.balance.theyOweMe}
+                                            </p>
+                                        )}
+                                        {scannedData.balance?.iOweThem > 0 && (
+                                            <p style={{ color: 'var(--danger)', margin: 0, fontWeight: 'bold' }}>
+                                                ⏳ You owe them: ₹{scannedData.balance.iOweThem}
+                                            </p>
+                                        )}
+                                        {(!scannedData.balance?.theyOweMe && !scannedData.balance?.iOweThem) && (
+                                            <p className="text-muted" style={{ margin: 0 }}>No pending balances with this user.</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {apiError && <div className="alert alert-danger mb-3">{apiError}</div>}
+
+                                <div className="form-group">
+                                    <label className="form-label">Direction</label>
+                                    <div className="flex gap-2">
+                                        <button
+                                            className={`btn ${direction === 'received' ? 'btn-primary' : 'btn-outline'}`}
+                                            style={{ flex: 1 }}
+                                            onClick={() => setDirection('received')}
+                                        >
+                                            🔽 They Gave Me (I Took)
+                                        </button>
+                                        <button
+                                            className={`btn ${direction === 'gave' ? 'btn-primary' : 'btn-outline'}`}
+                                            style={{ flex: 1 }}
+                                            onClick={() => setDirection('gave')}
+                                        >
+                                            🔼 I Gave Them (Payment)
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="form-group">
-                                    <label className="form-label">Select Module</label>
+                                    <label className="form-label">Module Mode</label>
                                     <select className="form-input form-select" value={module} onChange={(e) => setModule(e.target.value)}>
-                                        <option value="p2p">👥 Friend-to-Friend (P2P)</option>
-                                        <option value="shopkeeper">🏪 Shopkeeper Credit</option>
-                                        <option value="wholesaler">🏭 Wholesaler Credit</option>
+                                        <option value="p2p">👥 Friend-to-Friend</option>
+                                        <option value="shopkeeper">🏪 Shopkeeper / Daily</option>
+                                        <option value="wholesaler">🏭 Wholesaler Balance</option>
                                     </select>
                                 </div>
 
                                 <div className="form-group">
-                                    <label className="form-label">Credit Amount (₹)</label>
+                                    <label className="form-label">Amount (₹)</label>
                                     <input
                                         type="number"
                                         className="form-input"
-                                        placeholder="Enter amount"
+                                        placeholder="0.00"
                                         value={amount}
                                         onChange={(e) => setAmount(e.target.value)}
-                                        style={{ fontSize: '1.5rem' }}
+                                        style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
+                                        autoComplete="off"
                                     />
                                 </div>
 
                                 <div className="form-group">
                                     <label className="form-label">Description (Optional)</label>
-                                    <textarea
-                                        className="form-input form-textarea"
-                                        placeholder="What's this credit for?"
+                                    <input
+                                        type="text"
+                                        className="form-input"
+                                        placeholder="What's this for?"
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
-                                    ></textarea>
+                                        autoComplete="off"
+                                    />
                                 </div>
 
                                 <div className="flex gap-2">
-                                    <button className="btn btn-success btn-large" style={{ flex: 1 }} onClick={handleRecordCredit}>
-                                        ✅ Record Credit
+                                    <button
+                                        className="btn btn-success btn-large"
+                                        style={{ flex: 1 }}
+                                        onClick={handleRecordCredit}
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? 'Recording...' : '✅ Record Transaction'}
                                     </button>
-                                    <button className="btn btn-outline" onClick={() => setScannedData(null)}>
+                                    <button className="btn btn-outline" onClick={() => setScannedData(null)} disabled={isSubmitting}>
                                         Cancel
                                     </button>
                                 </div>
 
-                                <div className="alert alert-info mt-2">
-                                    <strong>Note:</strong> This credit will be recorded in both accounts.
-                                    {scannedData.name} will receive a notification.
-                                </div>
+                                {(scannedData.role === 'SHOPKEEPER' || scannedData.role === 'WHOLESALER') && direction === 'gave' && (
+                                    <div className="alert alert-info mt-3" style={{ fontSize: '0.85rem' }}>
+                                        <strong>Note:</strong> Since you are giving to a {scannedData.role.toLowerCase()}, this will be sent to their Inbox as a <b>Pending Cash Payment</b> for approval to deduct your debt.
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
